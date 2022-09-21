@@ -1,51 +1,237 @@
 import React,{useEffect, useState} from 'react'
 import { Button,Radio } from 'antd'
 import { useRouter } from 'next/router'
-import {ArrowLeftOutlined,ArrowRightOutlined} from "@ant-design/icons";
+import {ArrowLeftOutlined,ArrowRightOutlined,SendOutlined} from "@ant-design/icons";
 import Head from 'next/head';
 
 const Question = () => {
 
 const router=useRouter();
-
 const [animate,setAnimate]=useState(true)
 const [value, setValue] = useState(null);
 const [answers,setAnswers]=useState([])
 const [currentQuestion,setCurrentQuestion]=useState(0)
 const [questions,setQuestions]=useState([
-    {"q":"This is question 1",
-"o1":"This is option 1",
-"o2":"This is option 2",
-"o3":"This is option 3",
-"o4":"This is option 4",
-"a":1},
-{"q":"This is question 2",
-"o1":"This is option 1",
-"o2":"This is option 2",
-"o3":"This is option 3",
-"o4":"This is option 4",
-"a":1},
-{"q":"This is question 3",
-"o1":"This is option 1",
-"o2":"This is option 2",
-"o3":"This is option 3",
-"o4":"This is option 4",
-"a":1},
-{"q":"This is question 4",
-"o1":"This is option 1",
-"o2":"This is option 2",
-"o3":"This is option 3",
-"o4":"This is option 4",
-"a":1},
-{"q":"This is question 5",
-"o1":"This is option 1",
-"o2":"This is option 2",
-"o3":"This is option 3",
-"o4":"This is option 4",
-"a":1}
+{"q":`
+#include <stdio.h>
+int main() {
+    int a[5]={2,5,7,3,4};
+    for(int i=0;i<=3;i++)
+    {
+        if(a[i]&(i+1)<=a[i+1])
+        {
+            a[i]=a[i+1]^(i+1);
+        }
+        else
+        {
+            a[i]=a[i+1]&(i+1);
+        }
+    }
+    for(int j=0;j<5;j++)
+    {
+        printf("%d\t",a[j]);
+    }
+    return 0;
+}
+`,
+"o1":"1 7 0 0 6",
+"o2":"2 5 3 0 4",
+"o3":"1 5 0 0 4",
+"o4":"5 5 0 4 3",
+"a":3},
+{
+    "q":`
+    #include <stdio.h>
+int main() {
+   int a[8]={2,5,1,7,6,4,9,0};
+   int temp,count=0;
+   for(int i=0;i<7;i++)
+   {
+       for(int j=0;j<7-i;j++)
+       {
+           if(a[j]>a[j+1])
+           {
+               temp=a[j];
+               a[j]=a[j+1];
+               a[j+1]=temp;
+               count++;
+           }
+       }
+   }
+   printf("\n%d",count);
+    return 0;
+}
+    `,
+    "o1":"10",
+    "o2":"12",
+    "o3":"13",
+    "o4":"8",
+    "a":3
+},
+{
+    "q":"If we multiply two matrices what is the expected time complexity?",
+    "o1":"O(N)",
+    "o2":"O(N^2)",
+    "o3":"O(Log(N))",
+    "o4":"O(N^3)",
+    "a":4
+},
+{
+    "q":"If we multiply two matrices what is the expected time complexity?",
+    "o1":"O(N)",
+    "o2":"O(N^2)",
+    "o3":"O(Log(N))",
+    "o4":"O(N^3)",
+    "a":4
+},
+{
+    "q":"What is the time complexity of merge operation if size of two sorted array is m and n respectively? ",
+    "o1":"O(m+n)",
+    "o2":"O(mn)",
+    "o3":"O(max(m,n))",
+    "o4":"O(min(m,n))",
+    "a":1
+},
+{
+    "q":`
+    //What is the output of below program?
+int main()
+{
+int a = 10;
+printf("%d",a++);
+return 0;
+}
+    `,
+    "o1":"9",
+    "o2":"10",
+    "o3":"11",
+    "o4":"12",
+    "a":2
+},
+{
+    "q":"Which operator has highest precedence in * / % ?",
+    "o1":"*",
+    "o2":"/",
+    "o3":"%",
+    "o4":"All Have Same Precedence",
+    "a":4
+},
+{
+    "q":"_________ is the preprocessor directive which is used to end the scope of #ifdef.",
+    "o1":"#if",
+    "o2":"#endif",
+    "o3":"#ifndef",
+    "o4":"#elif",
+    "a":2
+},
+{
+    "q":"What following operator is called ?:",
+    "o1":"Scope Resolution Operator",
+    "o2":"Conditional Operator",
+    "o3":"Ternary Operator",
+    "o4":"if else o/p",
+    "a":3
+},
+{
+    "q":`
+    What will be the output of the C program?
+    #include<stdio.h>
+    #define CODE(j)\
+    printf("ByteFight 3.0\n");
+    int main()
+    {
+    CODE(0);
+    return 0;
+    }
+    `,
+    "o1":"Compilation error",
+    "o2":"ByteFight 3.0",
+    "o3":"Runtime Error",
+    "o4":"No Output",
+    "a":2
+},
+{
+    "q":"A queue is a ?",
+    "o1":"FIFO (First In First Out) list",
+    "o2":"LIFO (Last In First Out) list.",
+    "o3":"Ordered Tree",
+    "o4":"Linear Tree",
+    "a":1
+},
+{
+    "q":"If the elements “C”, “O”, “D” and “E” are placed in a QUEUE and STACK and are deleted one at a time, in what order will they be removed?",
+    "o1":"QUEUE : EDOC and STACK : EDOC",
+    "o2":"QUEUE : EDOC and STACK : CODE",
+    "o3":"QUEUE : CODE and STACK : CODE",
+    "o4":"QUEUE : CODE and STACK : EDOC",
+    "a":4
+},
+{
+    "q":"In the array implementation of circular queue, which of the following operation take worst case linear time?",
+    "o1":"Insertion",
+    "o2":"Deletion",
+    "o3":"Clear a Queue",
+    "o4":"None",
+    "a":4
+},
+{
+    "q":`
+    //What will be the output of the following program?
+
+#include<stdio.h>
+int main() {
+    int p=2,q=5,r=9;
+    if((q+9)<<p||(q&p)<p)
+    {
+        r=(p&p)+q;
+    }
+    else
+    {
+        p=r+p;
+    }
+    r=q+p;
+    printf("%d",p+q+r);
+    return 0;
+}
+    `,
+    "o1":"9",
+    "o2":"13",
+    "o3":"14",
+    "o4":"18",
+    "a":3
+},
+{
+    "q":`
+    //What will be the output of the following program?
+
+#include<stdio.h>
+int main() {
+    int p=7,q=3,r=4;
+    if((r+p)>(p-r))
+    {
+        p=(p+8)+p;
+    }
+    if(r<p||(p&q)<(6-p))
+    {
+        r=9&r; 
+    }
+    else
+    {
+        p=q+r;
+    }
+    printf("%d",p+q+r);
+    return 0;
+}
+    `,
+    "o1":"20",
+    "o2":"26",
+    "o3":"18",
+    "o4":"25",
+    "a":4
+}
 ]);
 const onChange = (e) => {
-console.log('radio checked', e.target.value);
+//console.log('radio checked', e.target.value);
 setValue(e.target.value);
 };
 
@@ -83,7 +269,7 @@ return (
     <div className={`w-2/3 h-2/3 bg-grey-transluscent flex animate__animated ${animate?"animate__fadeInLeft":"animate__fadeOutRight"}`}>
         <div className='w-2/5 bg-gray-600 flex flex-col justify-center items-center px-12 text-center'>
             <h1 className='text-white text-5xl mb-12'>Question {currentQuestion+1}</h1>
-            <h1 className='text-white text-3xl'>{questions[currentQuestion].q}</h1>
+            <h1 className='text-white text-xl'>{questions[currentQuestion].q}</h1>
         </div>
         <div className='w-3/5 text-center flex flex-col'>
             <h1 className='text-white text-3xl mt-12 mb-20'>Choose The Correct Option</h1>
@@ -99,8 +285,8 @@ return (
                 </div>
             </Radio.Group>
             <div className='mt-12 flex justify-between mx-20'>
-                <Button type="primary" onClick={()=>{if(currentQuestion!=0){setCurrentQuestion(currentQuestion-1)}setValue(null);setAnimate(false);}} icon={<ArrowLeftOutlined />} shape="round" size="middle" />
-                <Button onClick={()=>{submitAnswer();if(currentQuestion!=questions.length-1){setCurrentQuestion(currentQuestion+1);setValue(null);setAnimate(false);}else{router.replace("/endPage")}}} type="primary" icon={<ArrowRightOutlined />}shape="round" size="middle" />
+                {currentQuestion!==0&&<Button type="primary" onClick={()=>{if(currentQuestion!=0){setCurrentQuestion(currentQuestion-1)}setValue(null);setAnimate(false);}} icon={<ArrowLeftOutlined />} shape="round" size="middle" />}
+                <Button onClick={()=>{submitAnswer();if(currentQuestion!=questions.length-1){setCurrentQuestion(currentQuestion+1);setValue(null);setAnimate(false);}else{router.replace({"pathname":"/endPage"})}}} type="primary" icon={currentQuestion==questions.length-1?<SendOutlined />:<ArrowRightOutlined />}shape="round" size="middle" />
             </div>
         </div>
     </div>

@@ -28,24 +28,12 @@ a {
   background: url("../assets/processor.jpg");
   background-size: cover;
 }
+.bg-index{
+  background: url("../assets/index.jpg");
+  background-size: cover;
+}
 .bg1{
   background: url("../assets/bg1.jpg");
-  background-size: cover;
-}
-.bg2{
-  background: url("../assets/bg2.jpg");
-  background-size: cover;
-}
-.bg3{
-  background: url("../assets/bg3.jpg");
-  background-size: cover;
-}
-.bg4{
-  background: url("../assets/bg4.jpg");
-  background-size: cover;
-}
-.bg5{
-  background: url("../assets/bg5.jpg");
   background-size: cover;
 }
 .endLoseBg{
@@ -58,7 +46,7 @@ a {
 }
 
 .bg-grey-transluscent{
-  background: rgba(71, 68, 68, 0.8);
+  background: rgba(40, 38, 38, 0.9);
 }
 .bg-blue-transluscent{
   background: rgba(0, 0, 255, 0.2);

@@ -6,8 +6,9 @@ import { Button } from 'antd'
 import Link from 'next/link'
 import Head from 'next/head'
 
-const EndPage = () => {
-  const [passed,setPassed]=useState(false)
+const EndPage = (props) => {
+
+  const [passed,setPassed]=useState(true)
   return (
     <>
     <Head>
@@ -18,7 +19,7 @@ const EndPage = () => {
         {passed?<Image width={100} height={100} src={correct}/>:<Image width={100} height={100} src={wrong}/>}
         <h1 className='text-4xl text-white font-semibold text-center'>{passed?"Congratulations ,you are shortlisted for next round.":"Sorry ,you are not shortlisted for next Round"}</h1>
         <h1 className='text-2xl text-white font-semibold'>{passed?"Click the button to continue":"Thank You for giving the test."}</h1>
-        {passed&&<Link href="https://hackerrank.com/" passHref={true}><Button type="primary">Continue</Button></Link>}
+        {passed&&<Link href="https://hackerrank.com/bytefight-3-o" passHref={true}><Button type="primary">Continue</Button></Link>}
     </div>
 </div>
 </>
