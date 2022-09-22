@@ -268,11 +268,11 @@ return (
 <div className='bg1 w-screen h-screen flex justify-center items-center'>
     <div className={`w-2/3 h-2/3 bg-grey-transluscent flex animate__animated ${animate?"animate__fadeInLeft":"animate__fadeOutRight"}`}>
         <div className='w-2/5 bg-gray-600 flex flex-col justify-center items-center px-12 text-center'>
-            <h1 className='text-white text-5xl mb-12'>Question {currentQuestion+1}</h1>
+            <h1 className='text-white text-5xl mb-12 font-space'>Question {currentQuestion+1}</h1>
             <h1 className='text-white text-xl'>{questions[currentQuestion].q}</h1>
         </div>
         <div className='w-3/5 text-center flex flex-col'>
-            <h1 className='text-white text-3xl mt-12 mb-20'>Choose The Correct Option</h1>
+            <h1 className='text-white text-4xl mt-12 mb-20 font-space'>Choose The Correct Option</h1>
             <Radio.Group onChange={onChange} value={value}>
                 <div className='flex flex-col ml-12'>
                 <Radio value={1}><span className="text-white text-xl">{questions[currentQuestion].o1}</span></Radio>

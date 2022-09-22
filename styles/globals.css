@@ -52,6 +52,14 @@ a {
   background: rgba(0, 0, 255, 0.2);
 }
 
+@font-face {
+  font-family: 'spaceage';
+  src: url(../fonts/space\ age.ttf);
+}
+.font-space{
+  font-family: spaceage;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
