@@ -82,9 +82,9 @@ const Home = () => {
           <div className={`lg:w-1/2 md:w-2/3 w-5/6 h-2/3 flex bg-grey-transluscent flex-col justify-center items-center animate__animated ${animate ? "animate__zoomOutDown" : "animate__backInDown"}`}>
             <h1 className='xs:text-5xl text-3xl text-white font-bold uppercase mb-10 font-space text-center animate__animated animate__pulse animate__slow animate__infinite'>Welcome {data.name}</h1>
             <h1 className='xs:text-xl text-white font-semibold text-center'>Do Not Refresh the Page. Progress is not Stored</h1>
-            <h1 className='xs:text-xl text-white font-semibold text-center'>Your Browser must have an Active Internet Connection</h1>
-            <h1 className='xs:text-xl text-white font-semibold text-center'>A Total Of 20 Minutes Will be Provided.</h1>
-            <h1 className='xs:text-xl text-white font-semibold text-center'>The Following Quiz Contains 20 Question.s</h1>
+            <h1 className='xs:text-xl text-white font-semibold text-center'>Your Browser must have an active internet connection</h1>
+            <h1 className='xs:text-xl text-white font-semibold text-center'>A Total Of 30 Minutes Will be Provided.</h1>
+            <h1 className='xs:text-xl text-white font-semibold text-center'>The Following Quiz Contains 15 Questions.</h1>
             <h1 className='xs:text-xl text-white font-semibold text-center'>Each Correct Answer will help you gain 1 Point.</h1>
             <h1 className='xs:text-xl text-white font-semibold text-center'>There is no Negative Marking.</h1>
             {!data.hasFinished ? (time ? <Button type="primary" onClick={() => { setTimeout(() => { setAnimate(true) }, 1000); router.replace("/question") }} className='mt-10'>Click Here to Begin</Button> : <Button className='mt-10' disabled>Time is over or you are too early for the test</Button> ): <Button className='mt-10' disabled>Test Already Given</Button>}
