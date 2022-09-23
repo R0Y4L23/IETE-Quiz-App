@@ -1,25 +1,98 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import { Button, Radio, message } from 'antd'
 import { useRouter } from 'next/router'
 import { ArrowLeftOutlined, ArrowRightOutlined, SendOutlined } from "@ant-design/icons";
+import { doc, onSnapshot, updateDoc } from 'firebase/firestore'
+import { firestore } from "../firebase/config"
 import Head from 'next/head';
+import Countdown from 'react-countdown';
 
 const Question = () => {
 
     const showInfo = () => {
         message.info("Right Click is Disabled for security reasons")
     }
+    const [display, setDisplay] = useState(false)
+    const [data, setData] = useState(null)
+    const [timeRemaining, setTimeRemaining] = useState(0)
     useEffect(() => {
+        message.info("Loading....")
+        const token = sessionStorage.getItem("token")
+        if (!token) {
+            message.error("Please Login")
+            router.replace("/")
+        }
+        else {
+            const user = JSON.parse(sessionStorage.getItem("user"))
+            onSnapshot(doc(firestore, "Users", user.uid), (doc) => {
+                setData(doc.data())
+                if (!doc.data().hasFinished) {
+                    setDisplay(true)
+                    message.success("All the best")
+                }
+                else {
+                    message.error("Test Already Given")
+                    router.replace("/endPage")
+                }
+            });
+        }
+    }, [])
+
+    useEffect(()=>{
         document.addEventListener('contextmenu', (e) => {
             e.preventDefault();
             showInfo()
         });
-    }, [])
+    },[])
+
+    useEffect(() => {
+        var today = new Date();
+        var day, month, year, startH, startM, endH, endM
+        onSnapshot(doc(firestore, "Exam Date", "DateAndTime"), (doc) => {
+
+            let d = doc.data()
+            day = d.day
+            month = d.month
+            year = d.year
+            startH = d.startHour
+            startM = d.startMinute
+            endH = d.endHour
+            endM = d.endMinute
+
+            if (today.getDate() == day && (today.getMonth() + 1) == month && today.getFullYear() == year) {
+                if (today.getHours() >= startH && today.getHours() <= endH && today.getMinutes() >= startM && today.getMinutes() <= endM) {
+                    // if (endM - today.getMinutes() >= 1) {
+                    //     setTimeRemaining(endM - today.getMinutes())
+                    // }
+                    // else if (endM - today.getMinutes() == 0) {
+                    //     setTimeRemaining(1)
+                    // }
+
+                    if(today.getSeconds()==0)
+                    {
+                        setTimeRemaining((endM - today.getMinutes())*60000)
+                    }
+                    else{
+                        setTimeRemaining(((endM - today.getMinutes()-1)*60000)+((60-today.getSeconds())*1000))
+
+                    }
+                }
+                else {
+                    router.replace("/endPage")
+                }
+            }
+            else {
+                router.replace("/endPage")
+            }
+        });
+    })
 
     const router = useRouter();
     const [animate, setAnimate] = useState(true)
-    const [value, setValue] = useState(null);
-    const [answers, setAnswers] = useState([])
+    const [value, setValue] = useState(0);
+    const [answers, setAnswers] = useState([-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,])
+    const [optionSelected, setOptionSelected] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
     const [currentQuestion, setCurrentQuestion] = useState(0)
     const [questions, setQuestions] = useState([
         {
@@ -89,12 +162,12 @@ int main() {
             "a": 4
         },
         {
-            "q": "If we multiply two matrices what is the expected time complexity?",
-            "o1": "O(N)",
-            "o2": "O(N^2)",
-            "o3": "O(Log(N))",
-            "o4": "O(N^3)",
-            "a": 4
+            "q": "Which One Of the Following is not a Linear Data Structure?",
+            "o1": "Stack",
+            "o2": "Trees",
+            "o3": "Queue",
+            "o4": "Linked List",
+            "a": 2
         },
         {
             "q": "What is the time complexity of merge operation if size of two sorted array is m and n respectively? ",
@@ -242,24 +315,35 @@ int main() {
             "a": 4
         }
     ]);
+
     const onChange = (e) => {
-        //console.log('radio checked', e.target.value);
         setValue(e.target.value);
+        submitAnswer(e.target.value);
     };
 
     useEffect(() => {
         setAnimate(true)
     }, [animate])
 
-    const submitAnswer = () => {
-        if (value == null) {
+    const submitAnswer = (v) => {
+
+        let o = optionSelected
+        if (v != null) {
+            o[currentQuestion] = v
+        }
+        else {
+            o[currentQuestion] = 0
+        }
+        setOptionSelected(o)
+
+        if (v == null) {
             let a = answers
             a[currentQuestion] = -1
             setAnswers(a)
         }
         else {
             let a = answers
-            if (value == questions[currentQuestion].a) {
+            if (v == questions[currentQuestion].a) {
                 a[currentQuestion] = 1
             }
             else {
@@ -269,42 +353,70 @@ int main() {
         }
     }
 
-    return (
-        <>
-            <Head>
-                <title>Questions</title>
-            </Head>
+    const finishTest = async () => {
+        const user = JSON.parse(sessionStorage.getItem("user"))
+        var m = 0
+        for (let i = 0; i < answers.length; i++) {
+            if (answers[i] != -1) {
+                m += answers[i]
+            }
+        }
+        const userRef = doc(firestore, "Users", user.uid);
+        await updateDoc(userRef, {
+            hasFinished: true,
+            marks: m,
+            options: optionSelected,
+            answerGiven: answers
+        }).then(() => {
+            message.info("Quiz Ended")
+            router.replace({ "pathname": "/endPage" })
+        }).catch((e) => {
+            message.error("Some Error Occured")
+        });
+    }
 
-            <div className='bg1 w-screen h-screen flex flex-col justify-center items-center'>
-                <Button onClick={() => { router.replace({ "pathname": "/endPage" }) }} shape="round" type="danger" className=" self-end lg:-translate-x-20 sm2:-translate-x-16 -translate-x-6 sm2:-translate-y-20 -translate-y-5">Finish</Button>
-                <div className={`xl:w-2/3 lg:w-4/5 sm2:w-[90%] w-[98%] sm2:h-2/3 h-4/5 bg-grey-transluscent-questions flex animate__animated ${animate ? "animate__fadeInLeft" : "animate__fadeOutRight"}`}>
-                    <div className='w-2/5 bg-gray-600 flex flex-col justify-center items-center px-12 text-center'>
-                        <h1 className='text-white lg:text-5xl sm2:text-3xl text-lg mb-12 font-space'>Question {currentQuestion + 1}</h1>
-                        <h1 className='text-white lg:text-xl sm2:text-lg text-sm'>{questions[currentQuestion].q}</h1>
-                    </div>
-                    <div className='w-3/5 text-center flex flex-col justify-around'>
-                        <h1 className='text-white lg:text-4xl sm2:text-3xl text-lg mt-12 mb-20 font-space'>Choose The Correct Option</h1>
-                        <Radio.Group onChange={onChange} value={value}>
-                            <div className='flex flex-col ml-12'>
-                                <Radio value={1}><span className="text-white text-xl">{questions[currentQuestion].o1}</span></Radio>
-                                <div className='h-[15px]'></div>
-                                <Radio value={2}><span className="text-white text-xl">{questions[currentQuestion].o2}</span></Radio>
-                                <div className='h-[15px]'></div>
-                                <Radio value={3}><span className="text-white text-xl">{questions[currentQuestion].o3}</span></Radio>
-                                <div className='h-[15px]'></div>
-                                <Radio value={4}><span className="text-white text-xl">{questions[currentQuestion].o4}</span></Radio>
+    if (display && data) {
+        return (
+            <>
+                <Head>
+                    <title>Questions</title>
+                </Head>
+                <div className='bg1 w-screen h-screen flex flex-col justify-center items-center'>
+                    <Countdown onComplete={finishTest} className='self-start text-2xl font-bold text-white lg:translate-x-20 sm2:translate-x-16 translate-x-6 sm2:-translate-y-12 translate-y-3' date={Date.now() + (timeRemaining)} />
+                    <Button onClick={() => { finishTest() }} shape="round" type="danger" className=" self-end lg:-translate-x-20 sm2:-translate-x-16 -translate-x-6 sm2:-translate-y-20 -translate-y-5">Finish</Button>
+                    <div className={`xl:w-2/3 lg:w-4/5 sm2:w-[90%] w-[98%] sm2:h-2/3 h-4/5 bg-grey-transluscent-questions flex animate__animated ${animate ? "animate__fadeInLeft" : "animate__fadeOutRight"}`}>
+                        <div className='w-2/5 bg-gray-600 flex flex-col justify-center items-center px-12 text-center'>
+                            <h1 className='text-white lg:text-5xl sm2:text-3xl text-lg mb-12 font-space'>Question {currentQuestion + 1}</h1>
+                            <h1 className='text-white lg:text-xl sm2:text-lg text-sm'>{questions[currentQuestion].q}</h1>
+                        </div>
+                        <div className='w-3/5 text-center flex flex-col justify-around'>
+                            <h1 className='text-white lg:text-4xl sm2:text-3xl text-lg mt-12 mb-20 font-space'>Choose The Correct Option</h1>
+                            <Radio.Group onChange={onChange} value={value}>
+                                <div className='flex flex-col ml-12'>
+                                    <Radio value={1}><span className="text-white text-xl">{questions[currentQuestion].o1}</span></Radio>
+                                    <div className='h-[15px]'></div>
+                                    <Radio value={2}><span className="text-white text-xl">{questions[currentQuestion].o2}</span></Radio>
+                                    <div className='h-[15px]'></div>
+                                    <Radio value={3}><span className="text-white text-xl">{questions[currentQuestion].o3}</span></Radio>
+                                    <div className='h-[15px]'></div>
+                                    <Radio value={4}><span className="text-white text-xl">{questions[currentQuestion].o4}</span></Radio>
+                                </div>
+                            </Radio.Group>
+                            <div className='mt-12 flex justify-between mx-20'>
+                                {currentQuestion !== 0 && <Button type="primary" className="sm2:ml-0 -ml-16" onClick={() => { setValue(optionSelected[currentQuestion - 1]); if (currentQuestion != 0) { setCurrentQuestion(currentQuestion - 1) } setAnimate(false); }} icon={<ArrowLeftOutlined />} shape="round" size="middle" />}
+                                <Button className="sm2:mr-0 -mr-16" onClick={() => { if (currentQuestion != questions.length - 1) { setValue(optionSelected[currentQuestion + 1]); setCurrentQuestion(currentQuestion + 1); setAnimate(false); } else { finishTest() } }} type="primary" icon={currentQuestion == questions.length - 1 ? <SendOutlined /> : <ArrowRightOutlined />} shape="round" size="middle" />
                             </div>
-                        </Radio.Group>
-                        <div className='mt-12 flex justify-between mx-20'>
-                            {currentQuestion !== 0 && <Button type="primary" className="sm2:ml-0 -ml-16" onClick={() => { if (currentQuestion != 0) { setCurrentQuestion(currentQuestion - 1) } setValue(null); setAnimate(false); }} icon={<ArrowLeftOutlined />} shape="round" size="middle" />}
-                            <Button className="sm2:mr-0 -mr-16" onClick={() => { submitAnswer(); if (currentQuestion != questions.length - 1) { setCurrentQuestion(currentQuestion + 1); setValue(null); setAnimate(false); } else { router.replace({ "pathname": "/endPage" }) } }} type="primary" icon={currentQuestion == questions.length - 1 ? <SendOutlined /> : <ArrowRightOutlined />} shape="round" size="middle" />
                         </div>
                     </div>
+                    <p className="text-center text-white translate-y-8">Ⓒ IETE 2022</p>
                 </div>
-                <p className="text-center text-white translate-y-8">Ⓒ IETE 2022</p>
-            </div>
-        </>
-    )
+            </>
+        )
+
+    }
+    else {
+        return null
+    }
 }
 
 export default Question

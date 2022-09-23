@@ -3,11 +3,16 @@ import { MailOutlined, LockOutlined } from '@ant-design/icons';
 import { Input, Button, message } from 'antd';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import {auth} from "../firebase/config"
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const Index = () => {
 
   const router = useRouter();
   const [animate, setAnimate] = useState(false)
+  const [email,setEmail]=useState("")
+  const [password,setPassword]=useState("")
+  const [loading,setLoading]=useState(false)
 
   const showInfo = () => {
     message.info("Right Click is Disabled for security reasons")
@@ -18,6 +23,27 @@ const Index = () => {
       showInfo()
     });
   }, [])
+
+  const login=()=>{
+    setLoading(true)
+    if(email&&password)
+    {
+      signInWithEmailAndPassword(auth,email,password).then((user)=>{
+        sessionStorage.setItem("user",JSON.stringify(user.user))
+        sessionStorage.setItem("token",user.user.accessToken)
+        message.success("Successfully Logged In")
+        setLoading(false)
+        setTimeout(() => { setAnimate(true) }, 1000); router.replace("/home")
+      }).catch((e)=>{
+        message.error(e.message)
+        setLoading(false)
+      })
+    }
+    else{
+      message.error("Enter Email and Password")
+      setLoading(false)
+    }
+  }
 
   return (
     <>
@@ -30,9 +56,9 @@ const Index = () => {
         <div className={`w-1/2 h-1/2 bg-grey-transluscent flex flex-col justify-center items-center animate__animated ${animate ? "animate__zoomOutDown" : ""}`}>
           <h1 className='text-white xs:text-2xl text-lg font-mono xs:mb-10 uppercase z-10 animate__animated animate__flash animate__slower animate__infinite'> {">>"} Enter Contest</h1>
           <div className="flex flex-col justify-center items-center">
-            <Input size="large" className='my-3' placeholder="Enter Email" prefix={<MailOutlined />} />
-            <Input size="large" className='my-3' placeholder="Enter Password" prefix={<LockOutlined />} />
-            <Button type="primary" onClick={() => { setTimeout(() => { setAnimate(true) }, 1000); router.replace("/home") }} className='mt-10 font-space'>Sign In</Button>
+            <Input value={email} onChange={(e)=>{setEmail(e.target.value)}} size="large" className='my-3' placeholder="Enter Email" prefix={<MailOutlined />} />
+            <Input type="password" value={password} onChange={(e) => {setPassword(e.target.value)}}  size="large" className='my-3' placeholder="Enter Password" prefix={<LockOutlined />} />
+            <Button type="primary" onClick={() => { login()}} className='mt-10 font-space'>{!loading?"Sign In":"Loading..."}</Button>
           </div>
         </div>
       </div>
