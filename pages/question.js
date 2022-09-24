@@ -62,13 +62,6 @@ const Question = () => {
 
             if (today.getDate() == day && (today.getMonth() + 1) == month && today.getFullYear() == year) {
                 if (today.getHours() >= startH && today.getHours() <= endH && today.getMinutes() >= startM && today.getMinutes() <= endM) {
-                    // if (endM - today.getMinutes() >= 1) {
-                    //     setTimeRemaining(endM - today.getMinutes())
-                    // }
-                    // else if (endM - today.getMinutes() == 0) {
-                    //     setTimeRemaining(1)
-                    // }
-
                     if(today.getSeconds()==0)
                     {
                         setTimeRemaining((endM - today.getMinutes())*60000)
@@ -97,25 +90,25 @@ const Question = () => {
     const [questions, setQuestions] = useState([
         {
             "q": `
-#include <stdio.h>
-int main() {
-    int a[5]={2,5,7,3,4};
-    for(int i=0;i<=3;i++)
-    {
-        if(a[i]&(i+1)<=a[i+1])
-        {
-            a[i]=a[i+1]^(i+1);
-        }
-        else
-        {
-            a[i]=a[i+1]&(i+1);
-        }
-    }
-    for(int j=0;j<5;j++)
-    {
-        printf("%d\t",a[j]);
-    }
-    return 0;
+#include <stdio.h>\\n
+int main() {\\n
+    int a[5]={2,5,7,3,4};\\n
+    for(int i=0;i<=3;i++)\\n
+    {\\n
+        if(a[i]&(i+1)<=a[i+1])\\n
+        {\\n
+            a[i]=a[i+1]^(i+1);\\n
+        }\\n
+        else\\n
+        {\\n
+            a[i]=a[i+1]&(i+1);\\n
+        }\\n
+    }\\n
+    for(int j=0;j<5;j++)\\n
+    {\\n
+        printf("%d\t",a[j]);\\n
+    }\\n
+    return 0;\\n
 }
 `,
             "o1": "1 7 0 0 6",
@@ -126,25 +119,25 @@ int main() {
         },
         {
             "q": `
-    #include <stdio.h>
-int main() {
-   int a[8]={2,5,1,7,6,4,9,0};
-   int temp,count=0;
-   for(int i=0;i<7;i++)
-   {
-       for(int j=0;j<7-i;j++)
-       {
-           if(a[j]>a[j+1])
-           {
-               temp=a[j];
-               a[j]=a[j+1];
-               a[j+1]=temp;
-               count++;
-           }
-       }
-   }
-   printf("\n%d",count);
-    return 0;
+    #include <stdio.h>\\n
+int main() {\\n
+   int a[8]={2,5,1,7,6,4,9,0};\\n
+   int temp,count=0;\\n
+   for(int i=0;i<7;i++)\\n
+   {\\n
+       for(int j=0;j<7-i;j++)\\n
+       {\\n
+           if(a[j]>a[j+1])\\n
+           {\\n
+               temp=a[j];\\n
+               a[j]=a[j+1];\\n
+               a[j+1]=temp;\\n
+               count++;\\n
+           }\\n
+       }\\n
+   }\\n
+   printf("\n%d",count);\\n
+    return 0;\\n
 }
     `,
             "o1": "10",
@@ -179,12 +172,12 @@ int main() {
         },
         {
             "q": `
-    //What is the output of below program?
-int main()
-{
-int a = 10;
-printf("%d",a++);
-return 0;
+    //What is the output of below program?\\n
+int main()\\n
+{\\n
+int a = 10;\\n
+printf("%d",a++);\\n
+return 0;\\n
 }
     `,
             "o1": "9",
@@ -219,14 +212,14 @@ return 0;
         },
         {
             "q": `
-    What will be the output of the C program?
-    #include<stdio.h>
-    #define CODE(j)\
-    printf("ByteFight 3.0\n");
-    int main()
-    {
-    CODE(0);
-    return 0;
+    What will be the output of the C program?\\n
+    #include<stdio.h>\\n
+    #define CODE(j)\ \\n
+    printf("ByteFight 3.0\n");\\n
+    int main()\\n
+    {\\n
+    CODE(0);\\n
+    return 0;\\n
     }
     `,
             "o1": "Compilation error",
@@ -261,21 +254,21 @@ return 0;
         },
         {
             "q": `
-    //What will be the output of the following program?
+    //What will be the output of the following program?\\n
 
-#include<stdio.h>
-int main() {
-    int p=2,q=5,r=9;
-    if((q+9)<<p||(q&p)<p)
-    {
-        r=(p&p)+q;
-    }
-    else
-    {
-        p=r+p;
-    }
-    r=q+p;
-    printf("%d",p+q+r);
+#include<stdio.h>\\n
+int main() {\\n
+    int p=2,q=5,r=9;\\n
+    if((q+9)<<p||(q&p)<p)\\n
+    {\\n
+        r=(p&p)+q;\\n
+    }\\n
+    else\\n
+    {\\n
+        p=r+p;\\n
+    }\\n
+    r=q+p;\\n
+    printf("%d",p+q+r);\\n
     return 0;
 }
     `,
@@ -287,24 +280,24 @@ int main() {
         },
         {
             "q": `
-    //What will be the output of the following program?
+    //What will be the output of the following program?\\n
 
-#include<stdio.h>
-int main() {
-    int p=7,q=3,r=4;
-    if((r+p)>(p-r))
-    {
-        p=(p+8)+p;
-    }
-    if(r<p||(p&q)<(6-p))
-    {
-        r=9&r; 
-    }
-    else
-    {
-        p=q+r;
-    }
-    printf("%d",p+q+r);
+#include<stdio.h>\\n
+int main() {\\n
+    int p=7,q=3,r=4;\\n
+    if((r+p)>(p-r))\\n
+    {\\n
+        p=(p+8)+p;\\n
+    }\\n
+    if(r<p||(p&q)<(6-p))\\n
+    {\\n
+        r=9&r; \\n
+    }\\n
+    else\\n
+    {\\n
+        p=q+r;\\n
+    }\\n
+    printf("%d",p+q+r);\\n
     return 0;
 }
     `,
@@ -375,7 +368,7 @@ int main() {
         });
     }
 
-    if (display && data) {
+    if (display&&data) {
         return (
             <>
                 <Head>
@@ -387,7 +380,7 @@ int main() {
                     <div className={`xl:w-2/3 lg:w-4/5 sm2:w-[90%] w-[98%] sm2:h-2/3 h-4/5 bg-grey-transluscent-questions flex animate__animated ${animate ? "animate__fadeInLeft" : "animate__fadeOutRight"}`}>
                         <div className='w-2/5 bg-gray-600 flex flex-col justify-center items-center px-12 text-center'>
                             <h1 className='text-white lg:text-5xl sm2:text-3xl text-lg mb-12 font-space'>Question {currentQuestion + 1}</h1>
-                            <h1 className='text-white lg:text-xl sm2:text-lg text-sm'>{questions[currentQuestion].q}</h1>
+                            <h1 className='text-white text-sm'>{questions[currentQuestion].q.split("\\n").map((item,index)=>{return (<div key={index}>{item}</div>)})}</h1>
                         </div>
                         <div className='w-3/5 text-center flex flex-col justify-around'>
                             <h1 className='text-white lg:text-4xl sm2:text-3xl text-lg mt-12 mb-20 font-space'>Choose The Correct Option</h1>
